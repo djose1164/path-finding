@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 from math import sin, cos, sqrt, atan2, radians
 import heapq
+import folium
 
 # Función para calcular la distancia entre dos puntos dadas sus coordenadas latitud y longitud
 def distance(lat1, lon1, lat2, lon2):
@@ -67,6 +68,29 @@ def get_optimal_route(start_node, goal_node):
     # Devuelve una lista con los nodos transitorios
     print(adj_list)
     return ucs(adj_list, start_node, goal_node)
+
+def get_coordinates(node_id):
+    return nodes_dict[node_id]["lat"], nodes_dict[node_id]["lon"]
+
+def generate_map(start_node, goal_node, zoom_start=15):
+    # Obtenemos la ruta óptima y sus coordenadas
+    path = get_optimal_route(start_node, goal_node)
+    path_coords = [get_coordinates(node) for node in path]
+
+    # Configuración del mapa
+    folium_map = folium.Map(location=path_coords[0], zoom_start=15)
+
+    # Marcador del inicio
+    folium.Marker(location=path_coords[0], icon=folium.Icon(color="green")).add_to(folium_map)
+
+    # Marcador del fin
+    folium.Marker(location=path_coords[-1], icon=folium.Icon(color="red")).add_to(folium_map)
+
+    # Dibujar la ruta en el mapa
+    folium.PolyLine(locations=path_coords, color="blue").add_to(folium_map)
+
+    # Mostrar el mapa
+    return folium_map
 
 if __name__ == "__main__":
     # Definimos los nodos de inicio y final

@@ -5,7 +5,7 @@ import osmnx as ox
 import folium
 from PyQt6.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout,QPushButton, QLineEdit
 from PyQt6.QtWebEngineWidgets import QWebEngineView # pip install PyQtWebEngine
-
+import main
 """
 Folium in PyQt5
 """
@@ -39,28 +39,23 @@ class MyApp(QWidget):
         # Contenedor para los textfields y el button.
         textFieldLayout = QVBoxLayout()
         
-        src = QLineEdit(self)
-        src.setPlaceholderText("Origen nodeID..")
-        textFieldLayout.addWidget(src)
+        self.src = QLineEdit(self)
+        self.src.setPlaceholderText("Origen nodeID..")
+        textFieldLayout.addWidget(self.src)
         
-        dst = QLineEdit(self)
-        dst.setPlaceholderText("Destino nodeID..")
-        textFieldLayout.addWidget(dst)
+        self.dst = QLineEdit(self)
+        self.dst.setPlaceholderText("Destino nodeID..")
+        textFieldLayout.addWidget(self.dst)
         
         button = QPushButton("Encontrar ruta")
-        button.clicked.connect(self.zoom)
+        button.clicked.connect(self.find_route)
         textFieldLayout.addWidget(button)
         
         layout.addLayout(textFieldLayout)
         
-    def zoom(self):
+    def find_route(self):
         print(f"view_zoom {self.view_zoom}")
-        self.view_zoom += 1
-        location = (18.6259036, -69.4914634)
-        m = folium.Map(
-            zoom_start=self.view_zoom,
-            location=location
-        )
+        m = main.generate_map(self.src.text(), self.dst.text())
         data = io.BytesIO()
         m.save(data, close_file=False)
         self.webView.setHtml(data.getvalue().decode())
