@@ -1,15 +1,11 @@
-
-import sys
 import io
 import osmnx as ox
 import folium
 from PyQt6.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout,QPushButton, QLineEdit
 from PyQt6.QtWebEngineWidgets import QWebEngineView # pip install PyQtWebEngine
-import main
-"""
-Folium in PyQt5
-"""
-class MyApp(QWidget):
+from backend import generate_map
+
+class Map(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Folium in PyQt Example')
@@ -54,27 +50,8 @@ class MyApp(QWidget):
         layout.addLayout(textFieldLayout)
         
     def find_route(self):
-        print(f"view_zoom {self.view_zoom}")
-        m = main.generate_map(self.src.text(), self.dst.text())
+        m = generate_map(self.src.text(), self.dst.text())
         data = io.BytesIO()
         m.save(data, close_file=False)
         self.webView.setHtml(data.getvalue().decode())
         
-
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    app.setStyleSheet('''
-        QWidget {
-            font-size: 25px;
-        }
-    ''')
-    
-    myApp = MyApp()
-    myApp.show()
-
-    try:
-        sys.exit(app.exec())
-    except SystemExit:
-        print('Closing Window...')
