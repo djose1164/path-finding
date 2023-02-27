@@ -66,7 +66,6 @@ def ucs(graph, start, goal):
 def get_optimal_route(start_node, goal_node):
     # Buscamos la ruta más óptima entre los nodos de inicio y final
     # Devuelve una lista con los nodos transitorios
-    print(adj_list)
     return ucs(adj_list, start_node, goal_node)
 
 def get_coordinates(node_id):
