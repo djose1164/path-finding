@@ -1,3 +1,6 @@
+"""
+file: main.py
+"""
 import sys
 import frontend
 from frontend import Map

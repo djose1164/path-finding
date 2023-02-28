@@ -1,3 +1,6 @@
+"""
+file: frontend.py
+"""
 import io
 import osmnx as ox
 import folium
@@ -8,12 +11,15 @@ from backend import Graph
 class Map(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Folium in PyQt Example')
+        self.setWindowTitle('Map routing')
         self.resize(800, 720)
+        self._graph = Graph()
+        self.view_zoom = 15
+        
         layout = QHBoxLayout()
         self.setLayout(layout)
-        self.view_zoom = 15
-        self._graph = Graph()
+        
+        
 
         # Cargar el grafo desde el archivo .osm
         G = ox.graph_from_xml('map.osm', simplify=False)
@@ -26,11 +32,9 @@ class Map(QWidget):
         )
 
         # save map data to data object
-        data = io.BytesIO()
-        m.save(data, close_file=False)
-
+        self.update_map(m)
         self.webView = QWebEngineView()
-        self.webView.setHtml(data.getvalue().decode())
+        
         layout.addWidget(self.webView, stretch=7)
         
         # Contenedor para los textfields y el button.
@@ -52,7 +56,9 @@ class Map(QWidget):
         
     def find_route(self):
         m = self._graph.generate_map(self.src.text(), self.dst.text())
+        self.update_map(m)
+        
+    def update_map(self, m):
         data = io.BytesIO()
         m.save(data, close_file=False)
         self.webView.setHtml(data.getvalue().decode())
-        
