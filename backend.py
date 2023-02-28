@@ -10,7 +10,6 @@ class UCS:
         
     # Implementación del algoritmo UCS
     def ucs(self, start, goal):
-        print(self.graph)
         visited = set()
         queue = [(0, start, [])]
         heapq.heapify(queue)
@@ -62,7 +61,6 @@ class AdjacentList:
 
     
     def set_node_distance(self, i, node, nodes):
-        print(f"{node}\n{nodes}")
         if i > 0:
             dist = UCS.distance(
                 (self.nodes_dict[node]["lat"], self.nodes_dict[node]["lon"]),
